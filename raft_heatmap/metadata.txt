@@ -1,0 +1,27 @@
+[general]
+name=raft_heatmap
+about=QGIS plugin that streamlines heatmap generation for SDRPF RAFT data
+category=None
+hasProcessingProvider=False
+description=A custom plugin for quick and easy map generation of SDRPF RAFT map data
+icon=resources/images/default_icon.png
+tags=heatmap,workflow automation
+
+# credits and contact
+author=Alexandra Walton Weston
+email=alexwweston@gmail.com
+homepage=https://github.com/alxwstn/RAFTHeatmapMkr/pages
+repository=https://github.com/alxwstn/RAFTHeatmapMkr
+tracker=https://github.com/alxwstn/RAFTHeatmapMkr/issues/
+
+# QGIS context
+deprecated=False
+experimental=True
+plugin_dependencies=
+qgisMinimumVersion=3.44
+qgisMaximumVersion=3.99
+supportsQt6=True
+
+# versioning
+version=0.1.0
+changelog=
