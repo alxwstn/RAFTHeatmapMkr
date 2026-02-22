@@ -5,7 +5,6 @@
 # standard
 from functools import partial
 from pathlib import Path
-from typing import Optional
 
 # PyQGIS
 from qgis.core import Qgis, QgsApplication, QgsSettings
@@ -22,8 +21,6 @@ from raft_heatmap.__about__ import (
     __uri_homepage__,
 )
 from raft_heatmap.gui.dlg_settings import PlgOptionsFactory
-
-
 from raft_heatmap.toolbelt import PlgLogger
 
 # ############################################################################
@@ -41,7 +38,6 @@ class RaftHeatmapPlugin:
         """
         self.iface = iface
         self.log = PlgLogger().log
-        
 
         # translation
         # initialize the locale
@@ -54,7 +50,10 @@ class RaftHeatmapPlugin:
             / "i18n"
             / f"{__title__.lower()}_{self.locale}.qm"
         )
-        self.log(message=f"Translation: {self.locale}, {locale_path}", log_level=Qgis.MessageLevel.NoLevel)
+        self.log(
+            message=f"Translation: {self.locale}, {locale_path}",
+            log_level=Qgis.MessageLevel.NoLevel,
+        )
         if locale_path.exists():
             self.translator = QTranslator()
             self.translator.load(str(locale_path.resolve()))
