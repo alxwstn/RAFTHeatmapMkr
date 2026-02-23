@@ -10,7 +10,7 @@ tags=heatmap,workflow automation
 # credits and contact
 author=Alexandra Walton Weston
 email=alexwweston@gmail.com
-homepage=https://github.com/alxwstn/RAFTHeatmapMkr/pages
+homepage=https://github.com/alxwstn/RAFTHeatmapMkr/
 repository=https://github.com/alxwstn/RAFTHeatmapMkr
 tracker=https://github.com/alxwstn/RAFTHeatmapMkr/issues/
 
