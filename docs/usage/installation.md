@@ -1,19 +1,21 @@
 # Installation
 
-## Stable version (recomended)
+## Latest released version
 
-This plugin is published on the official QGIS plugins repository: <https://plugins.qgis.org/plugins/raft_heatmap/>.
+The plugin is automatically packaged for each commit to main, so you can use this address as repository URL in your QGIS extensions manager settings:
+
+```url
+https://alxwstn.github.io/RAFTHeatmapMkr/plugins.xml
+```
+Installation Steps:
+
+1. Launch QGIS and open the Plugin Manager: Select `Plugins` from the menu toolbar, then `Manage and Install Plugins`
+2. Select `Settings`. In the Plugin Repositories, select `Add`. Set the `Name` field to `RAFT heatmap plugin`, and the url field to `https://alxwstn.github.io/RAFTHeatmapMkr/plugins.xml`. Select `OK`.
+
+    ![QGIS - Add Custom Plugin Repository](../static/install_plugin_repository.png)
+3. Select `All` on the left hand menu, then filter to `raft`
+4. Select `raft_heatmap` and install
 
 ## Beta versions released
 
-Enable experimental extensions in the QGIS plugins manager settings panel.
-
-## Earlier development version
-
-If you define yourself as early adopter or a tester and can't wait for the release, the plugin is automatically packaged for each commit to main, so you can use this address as repository URL in your QGIS extensions manager settings:
-
-```url
-https://github.com/alxwstn/RAFTHeatmapMkr/pages/plugins.xml
-```
-
-Be careful, this version can be unstable.
+Enable experimental extensions in the QGIS plugins manager settings panel (see circled option in screenshot below).
