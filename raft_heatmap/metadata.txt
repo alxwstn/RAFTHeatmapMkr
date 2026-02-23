@@ -23,5 +23,5 @@ qgisMaximumVersion=3.99
 supportsQt6=True
 
 # versioning
-version=0.1.0
+version=0.1.0-beta1-DEV
 changelog=
