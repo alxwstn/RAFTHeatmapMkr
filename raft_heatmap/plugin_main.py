@@ -9,7 +9,7 @@ from pathlib import Path
 # PyQGIS
 from qgis.core import Qgis, QgsApplication, QgsSettings
 from qgis.gui import QgisInterface
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, Qt, QTranslator, QUrl
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator, QUrl
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 from qgis.PyQt.QtWidgets import QAction
 
@@ -21,7 +21,7 @@ from raft_heatmap.__about__ import (
     __uri_homepage__,
 )
 from raft_heatmap.gui.dlg_settings import PlgOptionsFactory
-from raft_heatmap.gui.dockwidget import RaftDockWidget
+from raft_heatmap.heatmap_manager import HeatmapManager
 from raft_heatmap.toolbelt import PlgLogger
 
 # ############################################################################
@@ -38,7 +38,9 @@ class RaftHeatmapPlugin:
         :type iface: QgsInterface
         """
         self.iface = iface
-        self.log = PlgLogger().log
+        logger = PlgLogger()
+        self.log = logger.log
+        self.heatmap_manager = HeatmapManager(logger=logger, iface=iface)
 
         # translation
         # initialize the locale
@@ -59,8 +61,6 @@ class RaftHeatmapPlugin:
             self.translator = QTranslator()
             self.translator.load(str(locale_path.resolve()))
             QCoreApplication.installTranslator(self.translator)
-
-        self.dockwidget = None
 
     def initGui(self):
         """Set up plugin UI elements."""
@@ -95,7 +95,7 @@ class RaftHeatmapPlugin:
             self.tr("Generate Heatmap"),
             self.iface.mainWindow(),
         )
-        self.action_heatmap.triggered.connect(lambda: self.run())
+        self.action_heatmap.triggered.connect(lambda: self.heatmap_manager.run())
 
         # -- Menu
         self.iface.addPluginToMenu(__title__, self.action_heatmap)
@@ -157,26 +157,15 @@ class RaftHeatmapPlugin:
         """
         try:
             self.log(
-                message=self.tr("Everything ran OK."),
+                message=self.tr("Everything ran OK with plugin."),
                 log_level=Qgis.MessageLevel.Success,
                 push=False,
             )
 
-            if self.dockwidget is None:
-                # Create the dockwidget (after translation) and keep reference
-                self.dockwidget = RaftDockWidget()
-                # show the dockwidget
-                self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
-                self.dockwidget.show()
-                self.log(
-                    message=self.tr("Dockwidget initialized."),
-                    log_level=Qgis.MessageLevel.Success,
-                    push=False,
-                )
         except Exception as err:
             self.log(
                 message=self.tr(
-                    "Something whent wrong with RAFT heatmap widget initialization: {}".format(
+                    "Something went wrong with RAFT heatmap plugin initialization: {}".format(
                         err
                     )
                 ),
