@@ -159,7 +159,7 @@ class RaftHeatmapPlugin:
             self.log(
                 message=self.tr("Everything ran OK."),
                 log_level=Qgis.MessageLevel.Success,
-                push=True,
+                push=False,
             )
 
             if self.dockwidget is None:
@@ -171,11 +171,15 @@ class RaftHeatmapPlugin:
                 self.log(
                     message=self.tr("Dockwidget initialized."),
                     log_level=Qgis.MessageLevel.Success,
-                    push=True,
+                    push=False,
                 )
         except Exception as err:
             self.log(
-                message=self.tr("Houston, we've got a problem: {}".format(err)),
+                message=self.tr(
+                    "Something whent wrong with RAFT heatmap widget initialization: {}".format(
+                        err
+                    )
+                ),
                 log_level=Qgis.MessageLevel.Critical,
                 push=True,
             )
