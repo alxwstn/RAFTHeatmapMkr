@@ -81,16 +81,21 @@ class HeatmapManager:
         parcel_uri = os.path.join(
             project_uri, "resources", "river_parcels", "ParcelUpdate1124.shp"
         )
-        print(parcel_uri)
         if os.path.exists(parcel_uri):
             self.parcel_layer = QgsVectorLayer(parcel_uri, "SDRPF_Parcels", "ogr")
             self.load_style(self.parcel_layer, self.fname_parcel_style)
             QgsProject.instance().addMapLayer(self.parcel_layer)
         else:
-            print("Oh no. Parcel file path invalid. Please recheck and try again")
+            self.log(
+                message="Parcel file path invalid. Please recheck and try again: {}".format(
+                    parcel_uri
+                ),
+                log_level=Qgis.MessageLevel.Critical,
+                push=True,
+            )
 
     def add_trashpins(self, csv_f_path: str):
-        if os.path.exists(csv_f_path):
+        try:
             mappler_csv_uri = (
                 "file:///"
                 + csv_f_path
@@ -102,19 +107,28 @@ class HeatmapManager:
             )
             self.load_style(self.pin_layer, self.fname_pin_style)
             QgsProject.instance().addMapLayer(self.pin_layer)
-        else:
-            print("Oh no. CSV file path invalid. Please recheck and try again")
+        except Exception as err:
+            self.log(
+                message="Unable to load Mappler CSV file. Please inspect your file and try again: {}".format(
+                    err
+                ),
+                log_level=Qgis.MessageLevel.Critical,
+                push=True,
+            )
             return
 
     def load_style(self, layer, style_fname):
         # @TODO: fix hardcoded path to styles
         project_uri = pathlib.Path(__file__).parent.resolve()
         style_uri = os.path.join(project_uri, "resources", "styles", style_fname)
-        if os.path.exists(style_uri):
+        try:
             layer.loadNamedStyle(style_uri)
-        else:
-            print("something went wrong with style loading")
-            print(style_uri)
+        except Exception as err:
+            self.log(
+                message="Unable to layer style: {}".format(err),
+                log_level=Qgis.MessageLevel.Critical,
+                push=True,
+            )
 
     # --------------Handlers for signals emitted by dockwidget------------------
 
@@ -136,16 +150,18 @@ class HeatmapManager:
             )
 
     def onMapplerCSVSelected(self, csv_f_path: str):
-        print("selected filepath!")
-        print(csv_f_path)
         self.add_basemap()
         self.add_parcels()
         self.add_trashpins(csv_f_path)
 
     def onHeatMapDisplaySelected(self):
         self.load_style(self.pin_layer, self.fname_heatmap_style)
-        print("Updating project CRS to EPSG:3857")
-        # heatmaps need this to display
+        self.log(
+            message="Updating project CRS to EPSG:3857",
+            log_level=Qgis.MessageLevel.Info,
+            push=False,
+        )
+        # heatmap style requires EPSG:3857
         QgsProject.instance().setCrs(QgsCoordinateReferenceSystem("EPSG:3857"))
 
         self.pin_layer.triggerRepaint()
@@ -155,7 +171,6 @@ class HeatmapManager:
         self.pin_layer.triggerRepaint()
 
     def onPinsFiltered(self, selected_categories):
-        print("pins filtered")
         if self.pin_layer is not None:
             serialized_categories = "','".join(
                 [PinCategories[c].value for c in selected_categories]
@@ -163,4 +178,8 @@ class HeatmapManager:
             self.pin_layer.setSubsetString(
                 "\"Category\" IN ('{}')".format(serialized_categories)
             )
-            print(self.pin_layer.featureCount())
+            self.log(
+                message="Filtered to {} features".format(self.pin_layer.featureCount()),
+                log_level=Qgis.MessageLevel.Info,
+                push=False,
+            )

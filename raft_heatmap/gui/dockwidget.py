@@ -51,10 +51,6 @@ class RaftDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.QgsFileWidget.fileChanged.connect(self.__signal_QgsFileWidget_fileChanged)
         # PyQt5.QtWidgets.QRadioButton
         self.showHeatMap.toggled.connect(self.__showHeatmap_toggled)
-        # PyQt5.QtWidgets.QGroupBox
-        print(self.pinConfigBox)
-        print(self.showPins)
-        print(self.showHeatMap)
         # qgis._gui.QgsCheckableComboBox
         for cat in PinCategories:
             self.filterPins.addItemWithCheckState(
@@ -71,7 +67,6 @@ class RaftDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         event.accept()
 
     def __signal_QgsFileWidget_fileChanged(self):
-        print(self.QgsFileWidget.filePath())
         self.csvSelected.emit(self.QgsFileWidget.filePath())
         self.reset_pin_categories()
 
@@ -82,5 +77,4 @@ class RaftDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.pinDisplaySelected.emit()
 
     def __filterPins_itemschanged(self):
-        print("items changed")
         self.pinsFiltered.emit(self.filterPins.checkedItemsData())
