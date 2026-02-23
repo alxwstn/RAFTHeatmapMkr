@@ -69,6 +69,9 @@ class HeatmapManager:
                 push=True,
             )
 
+    def unload(self):
+        self.dockwidget.close()
+
     def add_basemap(self):
         uri = "type=xyz&url=http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/%7Bz%7D/%7By%7D/%7Bx%7D&zmax=16&zmin=0&http-header:referer="
         layer = QgsRasterLayer(uri, "ESRI dark", "wms")

@@ -132,6 +132,11 @@ class RaftHeatmapPlugin:
 
     def unload(self):
         """Cleans up when plugin is disabled/uninstalled."""
+        self.log(
+            message="Unloading plugin and cleaning up UI elements...",
+            log_level=Qgis.MessageLevel.Info,
+            push=False,
+        )
         # -- Clean up menu
         self.iface.removePluginMenu(__title__, self.action_help)
         self.iface.removePluginMenu(__title__, self.action_settings)
@@ -146,9 +151,12 @@ class RaftHeatmapPlugin:
                 self.action_help_plugin_menu_documentation
             )
 
+        self.heatmap_manager.unload()
+
         # remove actions
         del self.action_settings
         del self.action_help
+        del self.action_heatmap
 
     def run(self):
         """Main process.
