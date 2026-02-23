@@ -7,6 +7,7 @@ repos:
       - id: check-added-large-files
         args:
           - --maxkb=500
+        exclude: "raft_heatmap/resources/river_parcels/.*"
       - id: check-case-conflict
       - id: check-illegal-windows-names
       - id: check-toml
