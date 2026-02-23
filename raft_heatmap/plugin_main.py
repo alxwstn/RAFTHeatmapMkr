@@ -9,7 +9,7 @@ from pathlib import Path
 # PyQGIS
 from qgis.core import Qgis, QgsApplication, QgsSettings
 from qgis.gui import QgisInterface
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, QTranslator, QUrl
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, Qt, QTranslator, QUrl
 from qgis.PyQt.QtGui import QDesktopServices, QIcon
 from qgis.PyQt.QtWidgets import QAction
 
@@ -21,6 +21,7 @@ from raft_heatmap.__about__ import (
     __uri_homepage__,
 )
 from raft_heatmap.gui.dlg_settings import PlgOptionsFactory
+from raft_heatmap.gui.dockwidget import RaftDockWidget
 from raft_heatmap.toolbelt import PlgLogger
 
 # ############################################################################
@@ -59,6 +60,8 @@ class RaftHeatmapPlugin:
             self.translator.load(str(locale_path.resolve()))
             QCoreApplication.installTranslator(self.translator)
 
+        self.dockwidget = None
+
     def initGui(self):
         """Set up plugin UI elements."""
 
@@ -78,7 +81,7 @@ class RaftHeatmapPlugin:
 
         self.action_settings = QAction(
             QgsApplication.getThemeIcon("console/iconSettingsConsole.svg"),
-            self.tr("Settings"),
+            self.tr("Setting"),
             self.iface.mainWindow(),
         )
         self.action_settings.triggered.connect(
@@ -87,7 +90,15 @@ class RaftHeatmapPlugin:
             )
         )
 
+        self.action_heatmap = QAction(
+            QgsApplication.getThemeIcon("console/iconSettingsConsole.svg"),
+            self.tr("Generate Heatmap"),
+            self.iface.mainWindow(),
+        )
+        self.action_heatmap.triggered.connect(lambda: self.run())
+
         # -- Menu
+        self.iface.addPluginToMenu(__title__, self.action_heatmap)
         self.iface.addPluginToMenu(__title__, self.action_settings)
         self.iface.addPluginToMenu(__title__, self.action_help)
 
@@ -124,6 +135,7 @@ class RaftHeatmapPlugin:
         # -- Clean up menu
         self.iface.removePluginMenu(__title__, self.action_help)
         self.iface.removePluginMenu(__title__, self.action_settings)
+        self.iface.removePluginMenu(__title__, self.action_heatmap)
 
         # -- Clean up preferences panel in QGIS settings
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
@@ -147,8 +159,20 @@ class RaftHeatmapPlugin:
             self.log(
                 message=self.tr("Everything ran OK."),
                 log_level=Qgis.MessageLevel.Success,
-                push=False,
+                push=True,
             )
+
+            if self.dockwidget is None:
+                # Create the dockwidget (after translation) and keep reference
+                self.dockwidget = RaftDockWidget()
+                # show the dockwidget
+                self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+                self.dockwidget.show()
+                self.log(
+                    message=self.tr("Dockwidget initialized."),
+                    log_level=Qgis.MessageLevel.Success,
+                    push=True,
+                )
         except Exception as err:
             self.log(
                 message=self.tr("Houston, we've got a problem: {}".format(err)),
