@@ -91,7 +91,7 @@ class RaftHeatmapPlugin:
         )
 
         self.action_heatmap = QAction(
-            QgsApplication.getThemeIcon("console/iconSettingsConsole.svg"),
+            QIcon(str(__icon_path__)),
             self.tr("Generate Heatmap"),
             self.iface.mainWindow(),
         )
