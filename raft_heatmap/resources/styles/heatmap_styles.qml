@@ -144,7 +144,7 @@
       </symbol>
     </profileMarkerSymbol>
   </elevation>
-  <renderer-v2 radius_unit="1" radius="500" radius_map_unit_scale="3x:0,0,0,0,0,0" forceraster="0" quality="3" referencescale="-1" type="heatmapRenderer" max_value="0" weight_expression="Bags of Trash" enableorderby="0" symbollevels="0">
+  <renderer-v2 radius_unit="1" radius="500" radius_map_unit_scale="3x:0,0,0,0,0,0" forceraster="0" quality="1" referencescale="-1" type="heatmapRenderer" max_value="0" weight_expression="Bags of Trash" enableorderby="0" symbollevels="0">
     <colorramp name="[source]" type="gradient">
       <Option type="Map">
         <Option name="color1" type="QString" value="0,0,4,0,rgb:0,0,0.0156863,0"/>
