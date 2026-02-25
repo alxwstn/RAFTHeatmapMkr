@@ -50,7 +50,9 @@ class HeatmapManager:
 
             # show the dockwidget
             if not self.widget_added:
-                self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
+                self.iface.addDockWidget(
+                    Qt.DockWidgetArea.RightDockWidgetArea, self.dockwidget
+                )
                 self.widget_added = True
 
             self.dockwidget.show()
