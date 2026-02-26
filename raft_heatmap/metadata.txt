@@ -1,16 +1,16 @@
 [general]
 name=raft_heatmap
-about=QGIS plugin that streamlines heatmap generation for SDRPF RAFT data
+about=QGIS plugin that streamlines custom heatmap generation for SDRPF RAFT data
 category=None
 hasProcessingProvider=False
-description=A custom plugin for quick and easy map generation of SDRPF RAFT map data
+description=Select a Mappler CSV export file, filter pins by category, and visualize as a heatmap. Ideal for generating maps of activity hotspots for presentations and as a starting point for futher analysis. This project also serves as an example of QGIS plugin development for future RAFT interns.
 icon=resources/images/default_icon.png
 tags=heatmap,workflow automation
 
 # credits and contact
 author=Alexandra Walton Weston
 email=alexwweston@gmail.com
-homepage=https://github.com/alxwstn/RAFTHeatmapMkr/
+homepage=https://alxwstn.github.io/RAFTHeatmapMkr/
 repository=https://github.com/alxwstn/RAFTHeatmapMkr
 tracker=https://github.com/alxwstn/RAFTHeatmapMkr/issues/
 
