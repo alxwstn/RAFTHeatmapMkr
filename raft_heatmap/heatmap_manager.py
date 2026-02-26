@@ -17,9 +17,8 @@ from qgis.core import (
 from qgis.gui import QgisInterface
 from qgis.PyQt.QtCore import Qt
 
-from raft_heatmap.category_enum import PinCategories
-
 # project
+from raft_heatmap.category_enum import PinCategories
 from raft_heatmap.gui.dockwidget import RaftDockWidget
 from raft_heatmap.toolbelt import PlgLogger
 
@@ -39,6 +38,7 @@ class HeatmapManager:
         self.widget_added = False
         self.parcel_layer = None
         self.pin_layer = None
+        self.base_layer = None
 
     def run(self):
         try:
@@ -76,8 +76,8 @@ class HeatmapManager:
 
     def add_basemap(self):
         uri = "type=xyz&url=http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/%7Bz%7D/%7By%7D/%7Bx%7D&zmax=16&zmin=0&http-header:referer="
-        layer = QgsRasterLayer(uri, "ESRI dark", "wms")
-        QgsProject.instance().addMapLayer(layer)
+        self.base_layer = QgsRasterLayer(uri, "ESRI dark", "wms")
+        QgsProject.instance().addMapLayer(self.base_layer)
 
     def add_parcels(self):
         # loading parcels
@@ -135,6 +135,19 @@ class HeatmapManager:
                 push=True,
             )
 
+    def reset_layers(self):
+        if self.parcel_layer is not None:
+            QgsProject.instance().removeMapLayer(self.parcel_layer.id())
+        if self.pin_layer is not None:
+            QgsProject.instance().removeMapLayer(self.pin_layer.id())
+        if self.base_layer is not None:
+            QgsProject.instance().removeMapLayer(self.base_layer.id())
+
+        self.parcel_layer = None
+        self.pin_layer = None
+        self.base_layer = None
+        self.iface.mapCanvas().refresh()
+
     # --------------Handlers for signals emitted by dockwidget------------------
 
     def configure_signal_handlers(self):
@@ -145,6 +158,7 @@ class HeatmapManager:
             )
             self.dockwidget.pinDisplaySelected.connect(self.onPinDisplaySelected)
             self.dockwidget.pinsFiltered.connect(self.onPinsFiltered)
+
         except Exception as err:
             self.log(
                 message="Something went wrong with signal handler configuration: {}".format(
@@ -155,25 +169,30 @@ class HeatmapManager:
             )
 
     def onMapplerCSVSelected(self, csv_f_path: str):
-        self.add_basemap()
-        self.add_parcels()
-        self.add_trashpins(csv_f_path)
+        self.reset_layers()
+
+        if csv_f_path:
+            self.add_basemap()
+            self.add_parcels()
+            self.add_trashpins(csv_f_path)
 
     def onHeatMapDisplaySelected(self):
-        self.load_style(self.pin_layer, self.fname_heatmap_style)
-        self.log(
-            message="Updating project CRS to EPSG:3857",
-            log_level=Qgis.MessageLevel.Info,
-            push=False,
-        )
-        # heatmap style requires EPSG:3857
-        QgsProject.instance().setCrs(QgsCoordinateReferenceSystem("EPSG:3857"))
+        if self.pin_layer is not None:
+            self.load_style(self.pin_layer, self.fname_heatmap_style)
+            self.log(
+                message="Updating project CRS to EPSG:3857",
+                log_level=Qgis.MessageLevel.Info,
+                push=False,
+            )
+            # heatmap style requires EPSG:3857
+            QgsProject.instance().setCrs(QgsCoordinateReferenceSystem("EPSG:3857"))
 
-        self.pin_layer.triggerRepaint()
+            self.pin_layer.triggerRepaint()
 
     def onPinDisplaySelected(self):
-        self.load_style(self.pin_layer, self.fname_pin_style)
-        self.pin_layer.triggerRepaint()
+        if self.pin_layer is not None:
+            self.load_style(self.pin_layer, self.fname_pin_style)
+            self.pin_layer.triggerRepaint()
 
     def onPinsFiltered(self, selected_categories):
         if self.pin_layer is not None:
