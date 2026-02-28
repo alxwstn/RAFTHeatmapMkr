@@ -9,15 +9,7 @@ To build it:
 ```bash
 # install aditionnal dependencies
 python -m pip install -U -r requirements/documentation.txt
-# build it
-sphinx-build -b html -d docs/_build/cache -j auto -q docs docs/_build/html
-```
-
-Open `docs/_build/index.html` in a web browser.
-
-## Write documentation using live render
-
-```bash
+# build it using live renderering
 sphinx-autobuild -b html docs/ docs/_build
 ```
 
