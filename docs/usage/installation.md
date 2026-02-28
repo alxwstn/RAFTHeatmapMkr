@@ -18,4 +18,4 @@ Installation Steps:
 
 ## Beta versions released
 
-Enable experimental extensions in the QGIS plugins manager settings panel (see circled option in screenshot below).
+Enable experimental extensions in the QGIS plugins manager settings panel (see circled option in screenshot above).
