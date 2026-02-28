@@ -16,11 +16,11 @@ tracker=https://github.com/alxwstn/RAFTHeatmapMkr/issues/
 
 # QGIS context
 deprecated=False
-experimental=True
+experimental=False
 qgisMinimumVersion=3.44
 qgisMaximumVersion=3.99
 supportsQt6=True
 
 # versioning
-version=0.1.0-beta1-DEV
+version=1.0.0
 changelog=
