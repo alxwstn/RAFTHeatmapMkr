@@ -5,11 +5,11 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![flake8](https://img.shields.io/badge/linter-flake8-green)](https://flake8.pycqa.org/)
 
-**View the official Documentation, including installation, usage, and development instructions, :star: [here](https://alxwstn.github.io/RAFTHeatmapMkr/>) :star:**
+**View the official Documentation, including installation, usage, and development instructions, :star: [here](https://alxwstn.github.io/RAFTHeatmapMkr/) :star:**
 
 Or copy the link here :point_down::
 ```
-https://alxwstn.github.io/RAFTHeatmapMkr/>
+https://alxwstn.github.io/RAFTHeatmapMkr/
 ```
 
 ### RAFT Heatmap QGIS Plugin Project Info
