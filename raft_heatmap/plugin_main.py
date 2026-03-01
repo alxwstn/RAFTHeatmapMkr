@@ -81,7 +81,7 @@ class RaftHeatmapPlugin:
 
         self.action_settings = QAction(
             QgsApplication.getThemeIcon("console/iconSettingsConsole.svg"),
-            self.tr("Setting"),
+            self.tr("Settings"),
             self.iface.mainWindow(),
         )
         self.action_settings.triggered.connect(
