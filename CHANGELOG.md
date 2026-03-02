@@ -16,7 +16,8 @@ Unreleased
 
 -->
 
-## 1.0.1 2026-03-01
+## 1.0.1 - 2026-01-03
+
 ### Tooling 🔧
 * Bump actions/upload-artifact from 6 to 7 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/23
 * Bump dawidd6/action-download-artifact from 9 to 16 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/22
@@ -26,7 +27,8 @@ Unreleased
 ### Other Changes
 * fix settings menu label by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/24
 
-## 1.0.0 2026-02-28
+## 1.0.0 - 2026-29-02
+
 ### Features and enhancements 🎉
 * UI improvements by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/9
 ### Tooling 🔧
@@ -42,7 +44,7 @@ Unreleased
 * Update icon by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/7
 * Bugfix plugin dependencies by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/8
 
-## 0.1.0 - 2026-02-21
+## 0.1.0 - 2026-21-02
 
 - First release
 - Generated with the [QGIS Plugins templater](https://oslandia.gitlab.io/qgis/template-qgis-plugin/)
