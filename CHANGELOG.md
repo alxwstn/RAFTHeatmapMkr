@@ -16,6 +16,16 @@ Unreleased
 
 -->
 
+## 1.0.1 2026-03-01
+### Tooling 🔧
+* Bump actions/upload-artifact from 6 to 7 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/23
+* Bump dawidd6/action-download-artifact from 9 to 16 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/22
+* Bump actions/download-artifact from 7 to 8 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/19
+* Bump actions/checkout from 4 to 6 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/21
+* Bump actions/setup-python from 5 to 6 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/20
+### Other Changes
+* fix settings menu label by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/24
+
 ## 1.0.0 2026-02-28
 ### Features and enhancements 🎉
 * UI improvements by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/9
