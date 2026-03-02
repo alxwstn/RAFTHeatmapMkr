@@ -31,6 +31,7 @@ Here comes the process for a tag `X.y.z` (which has to be SemVer compliant):
     1. In `Choose a tag`, enter the new tag
     1. Click on `Generate release notes`
     1. Copy/paste the generated text from `## What's changed` until the line before `**Full changelog**:...` in the CHANGELOG.md replacing `What's changed` with the tag and the publication date.
+    1. **WARNING**: review the comments in CHANGELOG.md to ensure proper formatting. See the related issue for more context: https://github.com/alxwstn/RAFTHeatmapMkr/issues/25
 1. Optionally change the version number in `metadata.txt`. It's recommended to use the next version number with `-DEV` suffix (e.g. `1.4.0-DEV` when `X.y.z` is `1.3.0` ) to avoid confusion during the development phase.
 1. Apply a git tag with the relevant version: `git tag -a X.y.z {git commit hash} -m "This version rocks!"`
 1. Push tag to main branch: `git push origin X.y.z` or `git push --tags` if you want to push all tags at once.

@@ -1,7 +1,10 @@
 # CHANGELOG
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
-
+<!--
+    Test that your file format adheres adequetely to the Keep A Changelog standard by pasting this changelog content into the test string field here: https://regex101.com/r/8JROUv/1
+    Consequences of having an improperly-formatted changelog: The qgis-plugin-ci tool relies on this changelog formatting to pick the latest version number when packaging the plugin and producing metadata. If the changelog is incorrectly formatted, the version listed with your package will be incorrect.
+-->
 <!--
 
 Unreleased
