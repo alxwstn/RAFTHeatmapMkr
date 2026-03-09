@@ -21,6 +21,8 @@ Unreleased
 
 ## 1.0.1 - 2026-01-03
 
+Release 1.0.1 bumps tooling dependencies and fixes UI labeling.
+
 ### Tooling 🔧
 * Bump actions/upload-artifact from 6 to 7 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/23
 * Bump dawidd6/action-download-artifact from 9 to 16 by @dependabot[bot] in https://github.com/alxwstn/RAFTHeatmapMkr/pull/22
@@ -31,6 +33,8 @@ Unreleased
 * fix settings menu label by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/24
 
 ## 1.0.0 - 2026-29-02
+
+Release 1.0.0 refactors the UI to improve usability, improves layer styling, bumps dependencies, and improves documentation.
 
 ### Features and enhancements 🎉
 * UI improvements by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/9
@@ -49,5 +53,6 @@ Unreleased
 
 ## 0.1.0 - 2026-21-02
 
-- First release
-- Generated with the [QGIS Plugins templater](https://oslandia.gitlab.io/qgis/template-qgis-plugin/)
+- Development release
+- Configure heatmap Proof of Concept plugin code.
+- Initial framework generated with the [QGIS Plugins templater](https://oslandia.gitlab.io/qgis/template-qgis-plugin/)
