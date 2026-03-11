@@ -35,6 +35,7 @@ class RaftDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.QgsFileWidget.fileChanged.connect(self.__signal_QgsFileWidget_fileChanged)
         # PyQt5.QtWidgets.QRadioButton
         self.showHeatMap.toggled.connect(self.__showHeatmap_toggled)
+        self.showHeatMap.adjustSize()
         self.pinConfigBox.setEnabled(False)
         self._checkboxes = {}  # key -> checkbox
         self._build_checkboxes()
