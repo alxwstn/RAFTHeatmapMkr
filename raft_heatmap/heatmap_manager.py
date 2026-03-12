@@ -2,9 +2,11 @@
 
 """Manager for heatmap layers and styles."""
 
-# standard
 import os
 import pathlib
+
+# standard
+from datetime import datetime
 
 # PyQGIS
 from qgis.core import (
@@ -75,12 +77,13 @@ class HeatmapManager:
         self.dockwidget.close()
 
     def add_basemap(self):
+        """Add the map baselayer"""
         uri = "type=xyz&url=http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/%7Bz%7D/%7By%7D/%7Bx%7D&zmax=16&zmin=0&http-header:referer="
         self.base_layer = QgsRasterLayer(uri, "ESRI dark", "wms")
         QgsProject.instance().addMapLayer(self.base_layer)
 
     def add_parcels(self):
-        # loading parcels
+        """Add the parcel shapefile layer"""
         # @TODO: fix hardcoded path to parcel shapefile
         project_uri = pathlib.Path(__file__).parent.resolve()
         parcel_uri = os.path.join(
@@ -100,6 +103,11 @@ class HeatmapManager:
             )
 
     def add_trashpins(self, csv_f_path: str):
+        """Load Mappler CSV pins into a QgsVectorLayer
+
+        :param csv_f_path: path to the csv file in the user's filesystem
+        :type csv_f_path: str
+        """
         try:
             mappler_csv_uri = (
                 "file:///"
@@ -123,6 +131,13 @@ class HeatmapManager:
             return
 
     def load_style(self, layer, style_fname):
+        """_summary_
+
+        :param layer: layer to be styled
+        :type layer: QgsVectorLayer
+        :param style_fname: filename of named style to be applied to the layer
+        :type style_fname: string
+        """
         # @TODO: fix hardcoded path to styles
         project_uri = pathlib.Path(__file__).parent.resolve()
         style_uri = os.path.join(project_uri, "resources", "styles", style_fname)
@@ -136,21 +151,55 @@ class HeatmapManager:
             )
 
     def reset_layers(self):
-        if self.parcel_layer is not None:
-            QgsProject.instance().removeMapLayer(self.parcel_layer.id())
-        if self.pin_layer is not None:
-            QgsProject.instance().removeMapLayer(self.pin_layer.id())
-        if self.base_layer is not None:
-            QgsProject.instance().removeMapLayer(self.base_layer.id())
+        """_summary_ rename the existing pin layer, hide it,
+        and manage base_layer and parcel layers
+        """
+        try:
+            displayedMapLayers = QgsProject.instance().mapLayers()
+            # remove references to the basemap and parcels layers, if they are no longer
+            # visible in the interface. They will be reloaded the next time a file is selected
+            if self.base_layer is not None:
+                if self.base_layer.id() not in displayedMapLayers:
+                    self.base_layer = None
 
-        self.parcel_layer = None
+            if (
+                self.parcel_layer is not None
+                and self.parcel_layer.id() not in displayedMapLayers
+            ):
+                self.parcel_layer = None
+
+            # rename the old pin layer and change its visibility, if it is still loaded in the map
+            if self.pin_layer is not None and self.pin_layer.id() in displayedMapLayers:
+                layer_name = "{}_{}".format(
+                    self.pin_layer.name(), datetime.now().isoformat()
+                )
+                self.pin_layer.setName(layer_name)
+                node = QgsProject.instance().layerTreeRoot().findLayer(self.pin_layer)
+                self.pin_layer = None
+                if node:
+                    node.setItemVisibilityChecked(False)
+                    self.log(
+                        message="CSV file changed or removed. Previous pin layer saved as {} and visibility changed to hidden".format(
+                            layer_name
+                        ),
+                        log_level=Qgis.MessageLevel.Warning,
+                        push=True,
+                    )
+        except Exception as err:
+            self.log(
+                message="Layer cleanup error: {}".format(err),
+                log_level=Qgis.MessageLevel.Warning,
+                push=False,
+            )
+            print(err)
+
         self.pin_layer = None
-        self.base_layer = None
         self.iface.mapCanvas().refresh()
 
     # --------------Handlers for signals emitted by dockwidget------------------
 
     def configure_signal_handlers(self):
+        """connect signals from the dockwidget UI to handlers in the heatmap_manager"""
         try:
             self.dockwidget.csvSelected.connect(self.onMapplerCSVSelected)
             self.dockwidget.heatMapDisplaySelected.connect(
@@ -169,14 +218,24 @@ class HeatmapManager:
             )
 
     def onMapplerCSVSelected(self, csv_f_path: str):
+        """signal handler that is triggered when the dockwidget csvSelected signal fires
+
+        :param csv_f_path: path to the csv file in the user's filesystem
+        :type csv_f_path: str
+        """
         self.reset_layers()
 
         if csv_f_path:
-            self.add_basemap()
-            self.add_parcels()
+            if self.base_layer is None:
+                self.add_basemap()
+            if self.parcel_layer is None:
+                self.add_parcels()
             self.add_trashpins(csv_f_path)
 
     def onHeatMapDisplaySelected(self):
+        """signal handler that is triggered when the dockwidget onHeatMapDisplaySelected
+        signal fires
+        """
         if self.pin_layer is not None:
             self.load_style(self.pin_layer, self.fname_heatmap_style)
             self.log(
@@ -190,11 +249,19 @@ class HeatmapManager:
             self.pin_layer.triggerRepaint()
 
     def onPinDisplaySelected(self):
+        """signal handler that is triggered when the dockwidget onPinDisplaySelected signal
+        fires.
+        """
         if self.pin_layer is not None:
             self.load_style(self.pin_layer, self.fname_pin_style)
             self.pin_layer.triggerRepaint()
 
     def onPinsFiltered(self, selected_categories):
+        """signal handler that is triggered when the dockwidget pinsFiltered
+        fires. This signal fires when the UI checkbox states are changed.
+        :param selected_categories: array representing the selected pin categories
+        :type selected_categories: list[PinCategory enum key]
+        """
         if self.pin_layer is not None:
             serialized_categories = "','".join(
                 [PinCategories[c].value for c in selected_categories]
