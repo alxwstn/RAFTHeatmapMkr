@@ -18,6 +18,15 @@ Unreleased
 ### Removed
 
 -->
+## 1.0.2 - 2026-12-03
+
+Release 1.0.2 includes small fixes, non-destructive layer management, and a few cleanup tasks.
+
+### Features and enhancements 🎉
+* adjust show heatmap label size to accommodate mac font by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/28
+### Other Changes
+* Presentation prep by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/26
+* handle file change by renaming instead of deleting old layer by @alxwstn in https://github.com/alxwstn/RAFTHeatmapMkr/pull/29
 
 ## 1.0.1 - 2026-01-03
 

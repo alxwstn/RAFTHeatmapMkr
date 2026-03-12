@@ -76,8 +76,8 @@ __plugin_dependencies__ = [
     if dep.strip()
 ]
 __summary__: str = "{}\n{}".format(
-    __plugin_md__.get("general").get("description"),
     __plugin_md__.get("general").get("about"),
+    __plugin_md__.get("general").get("description"),
 )
 
 __title__: str = __plugin_md__.get("general").get("name")
