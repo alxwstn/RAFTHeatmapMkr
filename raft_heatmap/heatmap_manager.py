@@ -77,12 +77,13 @@ class HeatmapManager:
         self.dockwidget.close()
 
     def add_basemap(self):
+        """Add the map baselayer"""
         uri = "type=xyz&url=http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/%7Bz%7D/%7By%7D/%7Bx%7D&zmax=16&zmin=0&http-header:referer="
         self.base_layer = QgsRasterLayer(uri, "ESRI dark", "wms")
         QgsProject.instance().addMapLayer(self.base_layer)
 
     def add_parcels(self):
-        # loading parcels
+        """Add the parcel shapefile layer"""
         # @TODO: fix hardcoded path to parcel shapefile
         project_uri = pathlib.Path(__file__).parent.resolve()
         parcel_uri = os.path.join(
@@ -102,6 +103,11 @@ class HeatmapManager:
             )
 
     def add_trashpins(self, csv_f_path: str):
+        """Load Mappler CSV pins into a QgsVectorLayer
+
+        :param csv_f_path: path to the csv file in the user's filesystem
+        :type csv_f_path: str
+        """
         try:
             mappler_csv_uri = (
                 "file:///"
@@ -125,6 +131,13 @@ class HeatmapManager:
             return
 
     def load_style(self, layer, style_fname):
+        """_summary_
+
+        :param layer: layer to be styled
+        :type layer: QgsVectorLayer
+        :param style_fname: filename of named style to be applied to the layer
+        :type style_fname: string
+        """
         # @TODO: fix hardcoded path to styles
         project_uri = pathlib.Path(__file__).parent.resolve()
         style_uri = os.path.join(project_uri, "resources", "styles", style_fname)
@@ -186,6 +199,7 @@ class HeatmapManager:
     # --------------Handlers for signals emitted by dockwidget------------------
 
     def configure_signal_handlers(self):
+        """connect signals from the dockwidget UI to handlers in the heatmap_manager"""
         try:
             self.dockwidget.csvSelected.connect(self.onMapplerCSVSelected)
             self.dockwidget.heatMapDisplaySelected.connect(
@@ -204,6 +218,11 @@ class HeatmapManager:
             )
 
     def onMapplerCSVSelected(self, csv_f_path: str):
+        """signal handler that is triggered when the dockwidget csvSelected signal fires
+
+        :param csv_f_path: path to the csv file in the user's filesystem
+        :type csv_f_path: str
+        """
         self.reset_layers()
 
         if csv_f_path:
@@ -214,6 +233,9 @@ class HeatmapManager:
             self.add_trashpins(csv_f_path)
 
     def onHeatMapDisplaySelected(self):
+        """signal handler that is triggered when the dockwidget onHeatMapDisplaySelected
+        signal fires
+        """
         if self.pin_layer is not None:
             self.load_style(self.pin_layer, self.fname_heatmap_style)
             self.log(
@@ -227,11 +249,19 @@ class HeatmapManager:
             self.pin_layer.triggerRepaint()
 
     def onPinDisplaySelected(self):
+        """signal handler that is triggered when the dockwidget onPinDisplaySelected signal
+        fires.
+        """
         if self.pin_layer is not None:
             self.load_style(self.pin_layer, self.fname_pin_style)
             self.pin_layer.triggerRepaint()
 
     def onPinsFiltered(self, selected_categories):
+        """signal handler that is triggered when the dockwidget pinsFiltered
+        fires. This signal fires when the UI checkbox states are changed.
+        :param selected_categories: array representing the selected pin categories
+        :type selected_categories: list[PinCategory enum key]
+        """
         if self.pin_layer is not None:
             serialized_categories = "','".join(
                 [PinCategories[c].value for c in selected_categories]
