@@ -2,9 +2,11 @@
 
 """Manager for heatmap layers and styles."""
 
-# standard
 import os
 import pathlib
+
+# standard
+from datetime import datetime
 
 # PyQGIS
 from qgis.core import (
@@ -136,16 +138,49 @@ class HeatmapManager:
             )
 
     def reset_layers(self):
-        if self.parcel_layer is not None:
-            QgsProject.instance().removeMapLayer(self.parcel_layer.id())
-        if self.pin_layer is not None:
-            QgsProject.instance().removeMapLayer(self.pin_layer.id())
-        if self.base_layer is not None:
-            QgsProject.instance().removeMapLayer(self.base_layer.id())
+        """_summary_ rename the existing pin layer, hide it,
+        and manage base_layer and parcel layers
+        """
+        try:
+            displayedMapLayers = QgsProject.instance().mapLayers()
+            # remove references to the basemap and parcels layers, if they are no longer
+            # visible in the interface. They will be reloaded the next time a file is selected
+            if self.base_layer is not None:
+                if self.base_layer.id() not in displayedMapLayers:
+                    self.base_layer = None
 
-        self.parcel_layer = None
+            if (
+                self.parcel_layer is not None
+                and self.parcel_layer.id() not in displayedMapLayers
+            ):
+                self.parcel_layer = None
+
+            # rename the old pin layer and change its visibility, if it is still loaded in the map
+            if self.pin_layer is not None and self.pin_layer.id() in displayedMapLayers:
+                layer_name = "{}_{}".format(
+                    self.pin_layer.name(), datetime.now().isoformat()
+                )
+                self.pin_layer.setName(layer_name)
+                node = QgsProject.instance().layerTreeRoot().findLayer(self.pin_layer)
+                self.pin_layer = None
+                if node:
+                    node.setItemVisibilityChecked(False)
+                    self.log(
+                        message="CSV file changed or removed. Previous pin layer saved as {} and visibility changed to hidden".format(
+                            layer_name
+                        ),
+                        log_level=Qgis.MessageLevel.Warning,
+                        push=True,
+                    )
+        except Exception as err:
+            self.log(
+                message="Layer cleanup error: {}".format(err),
+                log_level=Qgis.MessageLevel.Warning,
+                push=False,
+            )
+            print(err)
+
         self.pin_layer = None
-        self.base_layer = None
         self.iface.mapCanvas().refresh()
 
     # --------------Handlers for signals emitted by dockwidget------------------
@@ -172,8 +207,10 @@ class HeatmapManager:
         self.reset_layers()
 
         if csv_f_path:
-            self.add_basemap()
-            self.add_parcels()
+            if self.base_layer is None:
+                self.add_basemap()
+            if self.parcel_layer is None:
+                self.add_parcels()
             self.add_trashpins(csv_f_path)
 
     def onHeatMapDisplaySelected(self):
